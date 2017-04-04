@@ -32,19 +32,23 @@ if (process.env.NODE_ENV === 'production') {
 	app.use(forceSsl);
 }
 
+let firebaseApp;
+
 try {
-	const firebaseApp = firebase.initializeApp({
-		apiKey: process.env.FB_APIKEY,
-		authDomain: process.env.FB_AUTHDOMAIN,
-		databaseURL: process.env.FB_DATABASEURL,
-		storageBucket: process.env.FB_STORAGEBUCKET,
-		messagingSenderId: process.env.FB_MESSAGINGSENDERID
+	firebaseApp = firebase.initializeApp({
+		apiKey: process.env.FB_CONFIG_APIKEY,
+		authDomain: process.env.FB_CONFIG_AUTHDOMAIN,
+		databaseURL: process.env.FB_CONFIG_DATABASEURL,
+		storageBucket: process.env.FB_CONFIG_STORAGEBUCKET,
+		messagingSenderId: process.env.FB_CONFIG_MESSAGINGSENDERID
 	});
 
 } catch (e) {
 	LOGGER.error( e );
 	process.exit(1);
 }
+
+global.CONFIG_DATABASE = firebaseApp.database();
 
 LOGGER.info("Firebase App created!");
 
