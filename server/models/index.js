@@ -6,4 +6,6 @@ module.exports.models = {
 
 	Organization : require('./organization'),
 
+	User: require('./user'),
+
 };

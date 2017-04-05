@@ -18,11 +18,22 @@ const VR = require('validation/request');
 
 const RX = VR.REQUESTEXCEPTIONS;
 
+const VALIDATESCHEMA = require( 'validation/jsonSchema' ).validateSchema;
+
+
 router.post('/', [
 		bodyParserJSON,
 		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] ),
 	],
 	controller.createOrganization
+);
+
+router.post('/:orgid/user', [
+		bodyParserJSON,
+		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] ),
+		VALIDATESCHEMA( require('../validation/schemas/user.schema') )
+	],
+	controller.createOrganizationUser
 );
 
 module.exports = router;
