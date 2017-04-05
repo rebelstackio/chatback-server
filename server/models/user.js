@@ -6,6 +6,8 @@ const firebase = require('firebase');
 
 const fbencode = require('firebase-encode').encode;
 
+const aguid = require('aguid');
+
 const reference = global.CONFIG_DATABASE.ref();
 
 const ERROR = require('error');
@@ -32,7 +34,6 @@ const DEFAULT_USER_MODEL = {
 	avatarUrl: null
 }
 
-
 /**
  * _getDefaultUserObject - Creates a default user object with default props
  *
@@ -56,7 +57,8 @@ const createUserByOrgId = function _createUser ( organizationId, userBody, next 
 	).child(
 		organizationId
 	).child(
-		fbencode(userBody.email)
+		//UUID FOR EMAIL
+		aguid(userBody.email)
 	);
 	userRef.once("value").then(function( snapshot ) {
 		if ( snapshot.hasChildren() ) {
@@ -67,7 +69,6 @@ const createUserByOrgId = function _createUser ( organizationId, userBody, next 
 			);
 		} else {
 			const body = getDefaultUserObject(userBody);
-			delete body.email;
 			userRef.set(body).then( function() {
 				return next(null);
 			}).catch( function( error ){
