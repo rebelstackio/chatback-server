@@ -26,12 +26,12 @@ const DEFAULT_USER_MODEL = {
 	email: '',
 	createdAt: firebase.database.ServerValue.TIMESTAMP,
 	updatedAt: '',
-	restoreToken: null,
+	restoreToken: '',
 	chatSettings: {
 		audioNotification: true,
 		webNotification: true
 	},
-	avatarUrl: null
+	avatarUrl: ''
 }
 
 /**
@@ -52,13 +52,14 @@ const getDefaultUserObject = function _getDefaultUserObject( user ) {
  * @param  {function} next         callback
  */
 const createUserByOrgId = function _createUser ( organizationId, userBody, next ) {
+	//UUID FOR EMAIL
+	const id = aguid(userBody.email);
 	const userRef = reference.child(
 		'users'
 	).child(
 		organizationId
 	).child(
-		//UUID FOR EMAIL
-		aguid(userBody.email)
+		id
 	);
 	userRef.once("value").then(function( snapshot ) {
 		if ( snapshot.hasChildren() ) {
@@ -70,7 +71,8 @@ const createUserByOrgId = function _createUser ( organizationId, userBody, next 
 		} else {
 			const body = getDefaultUserObject(userBody);
 			userRef.set(body).then( function() {
-				return next(null);
+				body.id = id;
+				return next(null, body);
 			}).catch( function( error ){
 				return next(
 					new ERROR.DataBaseError(
