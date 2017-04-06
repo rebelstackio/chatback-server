@@ -83,8 +83,113 @@ const createUserByOrgId = function _createUser ( organizationId, userBody, next 
 			});
 		}
 	});
-
 };
+
+/**
+ * _recoverSession - Create a new user
+ *
+ * @param  {string} organizationId User's Organization Id
+ * @param  {object} userBody       User's props
+ * @param  {function} next         callback
+ */
+const recoverSession = function _recoverSession ( organizationId, email, next ) {
+	//UUID FOR EMAIL
+	const id = aguid(email);
+	const userRef = reference.child(
+		'users'
+	).child(
+		organizationId
+	).child(
+		id
+	);
+	userRef.once("value").then(function( snapshot ) {
+		if ( snapshot.hasChildren() ) {
+			const token = aguid();
+			snapshot.ref.update(
+				{
+					restoreToken: token,
+					updatedAt: firebase.database.ServerValue.TIMESTAMP,
+				}
+			).then( function(snapshot){
+				return next(null,{
+					token: token,
+					id: id
+				});
+			}).catch( function(error){
+				return next(
+					new ERROR.DataBaseError(
+						error,
+						error.message
+					)
+				);
+			});
+		} else {
+			return next(
+				new ERROR.NotFoundError(
+				 'User not found'
+				)
+			);
+		}
+	}).catch( function(error){
+		return next(
+			new ERROR.DataBaseError(
+				error,
+				error.message
+			)
+		);
+	});
+};
+
+const checkToken = function _checkToken( organizationId, userId, token, next) {
+	const userRef = reference.child(
+		'users'
+	).child(
+		organizationId
+	).child(
+		userId
+	);
+
+	userRef.once("value").then(function( snapshot ) {
+		if ( snapshot.hasChildren() ) {
+			const user = snapshot.val();
+			if (user.restoreToken === token ) {
+				snapshot.ref.update(
+					{
+						restoreToken: '',
+						updatedAt: firebase.database.ServerValue.TIMESTAMP,
+					}
+				).then( function(snapshot){
+					return next(
+						null
+					);
+				}).catch( function(error){
+					return next(
+						new ERROR.DataBaseError(
+							error,
+							error.message
+						)
+					);
+				});
+			} else {
+				return next(
+					new ERROR.ForbiddenError(
+						'Wrong verification code. Check your email account.'
+					)
+				)
+			}
+		} else {
+			return next(
+				new ERROR.NotFoundError(
+				 'User not found'
+				)
+			);
+		}
+	});
+}
 
 
 exports.createUserByOrgId = createUserByOrgId;
+
+exports.recoverSession = recoverSession;
+
+exports.checkToken = checkToken;

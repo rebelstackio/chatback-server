@@ -36,4 +36,18 @@ router.post('/:orgid/user', [
 	controller.createOrganizationUser
 );
 
+router.patch('/:orgid/user', [
+		bodyParserJSON,
+		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] )
+	],
+	controller.recoverOrganizationUserSession
+);
+
+router.patch('/:orgid/user/:userid', [
+		bodyParserJSON,
+		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] )
+	],
+	controller.checkOrganizationUserToken
+);
+
 module.exports = router;
