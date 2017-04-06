@@ -17,6 +17,15 @@ global.LOGGER = new Logger(process.env.NODE_ENV);
 const express = require('express');
 const app = express();
 
+const allowCrossDomain = function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,PATCH,DELETE,OPTIONS');
+	res.header('Access-Control-Allow-Headers', 'Accept,Content-Type, Authorization, Content-Length, X-Requested-With');
+	next();
+};
+
+app.use(allowCrossDomain)
+
 /*
 Don't accept requests that are not https.
 We need this as heroku forwards all requests from its proxy as http.
@@ -53,8 +62,7 @@ global.CONFIG_DATABASE = firebaseApp.database();
 LOGGER.info("Firebase App created!");
 
 // load all models
-// TODO LOAD THE MODELS
-// require('./models');
+require('./models');
 
 //Register routes
 require('./routes')( app );
@@ -98,11 +106,6 @@ app.use ( function _respondError ( error, req, res, next ) {
 		next( error );
 	}
 });
-
-//TODO Just for now!!
-const cors = require('cors');
-app.use(cors({'exposedHeaders': ['Authorization']}));
-
 
 const port = process.env.PORT || '10000';
 app.set('port', port);
