@@ -7,6 +7,8 @@ module.exports = function registerRouters( app ) {
 
 	app.use( '/user', require('./user.router') ),
 
-	app.use( '/organization', require('./organization.router') )
+	app.use( '/organization', require('./organization.router') ),
+
+	app.use( '/avatar', require('./avatar.router') )
 
 };

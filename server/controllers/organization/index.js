@@ -11,6 +11,8 @@ const _recoverOrganizationUserSession = require('./recoverOrganizationUserSessio
 
 const _checkOrganizationUserToken = require('./checkOrganizationUserToken');
 
+const _getOrganizationUser = require('./getOrganizationUser');
+
 module.exports = {
 
 	"createOrganization": _createOrganization,
@@ -19,5 +21,7 @@ module.exports = {
 
 	"recoverOrganizationUserSession": _recoverOrganizationUserSession,
 
-	"checkOrganizationUserToken": _checkOrganizationUserToken
+	"checkOrganizationUserToken": _checkOrganizationUserToken,
+
+	"getOrganizationUser": _getOrganizationUser
 }

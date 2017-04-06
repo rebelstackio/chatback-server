@@ -1,6 +1,6 @@
 'use strict';
 /*
- * routes/common.route.js
+ * routes/organization.route.js
  *
  * Route configuration for users resources
  *
@@ -49,5 +49,7 @@ router.patch('/:orgid/user/:userid', [
 	],
 	controller.checkOrganizationUserToken
 );
+
+router.get('/:orgid/user/:userid', controller.getOrganizationUser);
 
 module.exports = router;

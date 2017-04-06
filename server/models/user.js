@@ -4,8 +4,6 @@
 
 const firebase = require('firebase');
 
-const fbencode = require('firebase-encode').encode;
-
 const aguid = require('aguid');
 
 const reference = global.CONFIG_DATABASE.ref();
@@ -187,9 +185,33 @@ const checkToken = function _checkToken( organizationId, userId, token, next) {
 	});
 }
 
+const getUserById = function _getUserById( organizationId, userId, next) {
+	const userRef = reference.child(
+		'users'
+	).child(
+		organizationId
+	).child(
+		userId
+	);
+
+	userRef.once("value").then(function( snapshot ) {
+		if ( snapshot.hasChildren() ) {
+			const user = snapshot.val();
+			return next(null, user);
+		} else {
+			return next(
+				new ERROR.NotFoundError(
+				 'User not found'
+				)
+			);
+		}
+	});
+}
 
 exports.createUserByOrgId = createUserByOrgId;
 
 exports.recoverSession = recoverSession;
 
 exports.checkToken = checkToken;
+
+exports.getUserById = getUserById;

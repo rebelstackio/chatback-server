@@ -22,7 +22,7 @@ module.exports = function recoverOrganizationUserSession ( req, res, next ) {
 				if ( error ) {
 					return next( error );
 				} else {
-					const response {
+					const response = {
 						id: data.id
 					}
 					const resObj = VCOController.wrapSuccessDataObj( response, path );
