@@ -57,6 +57,8 @@ router.patch('/:orgid/user/:userid', [
 	controller.updateOrganizationUser
 );
 
+router.get('/:orgid/user', controller.getAllOrganizationUser);
+
 router.get('/:orgid/user/:userid', controller.getOrganizationUser);
 
 module.exports = router;

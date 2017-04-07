@@ -245,6 +245,26 @@ const updateUserByOrgId = function _updateUserByOrgId(organizationId, userId, up
 	});
 }
 
+const getAllUserByOrgId = function _getAllUserByOrgId(organizationId, next) {
+	const userRef = reference.child(
+		'users'
+	).child(
+		organizationId
+	)
+
+	userRef.once("value").then(function( snapshot ) {
+		const users = snapshot.val();
+		 next(null, users);
+	}).catch( function(error){
+		 next(
+			new ERROR.DataBaseError(
+				error,
+				error.message
+			)
+		);
+	});
+}
+
 exports.createUserByOrgId = createUserByOrgId;
 
 exports.recoverSession = recoverSession;
@@ -254,3 +274,5 @@ exports.checkToken = checkToken;
 exports.getUserById = getUserById;
 
 exports.updateUserByOrgId = updateUserByOrgId;
+
+exports.getAllUserByOrgId = getAllUserByOrgId;

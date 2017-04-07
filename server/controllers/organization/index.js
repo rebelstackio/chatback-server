@@ -15,6 +15,8 @@ const _getOrganizationUser = require('./getOrganizationUser');
 
 const _updateOrganizationUser = require('./updateOrganizationUser');
 
+const _getAllOrganizationUser = require('./getAllOrganizationUser');
+
 module.exports = {
 
 	"createOrganization": _createOrganization,
@@ -27,5 +29,7 @@ module.exports = {
 
 	"getOrganizationUser": _getOrganizationUser,
 
-	"updateOrganizationUser": _updateOrganizationUser
+	"updateOrganizationUser": _updateOrganizationUser,
+
+	"getAllOrganizationUser": _getAllOrganizationUser
 }
