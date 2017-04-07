@@ -27,9 +27,9 @@ const DEFAULT_USER_MODEL = {
 	restoreToken: '',
 	chatSettings: {
 		audioNotification: true,
-		webNotification: true
-	},
-	avatarUrl: ''
+		webNotification: true,
+		avatarUrl: ''
+	}
 }
 
 /**
@@ -208,6 +208,43 @@ const getUserById = function _getUserById( organizationId, userId, next) {
 	});
 }
 
+const updateUserByOrgId = function _updateUserByOrgId(organizationId, userId, updates, next) {
+	const userRef = reference.child(
+		'users'
+	).child(
+		organizationId
+	).child(
+		userId
+	).child(
+		'chatSettings'
+	);
+
+	userRef.once("value").then(function( snapshot ) {
+		if ( snapshot.hasChildren() ) {
+			snapshot.ref.update(
+				updates
+			).then( function(snapshot){
+				return next(
+					null
+				);
+			}).catch( function(error){
+				return next(
+					new ERROR.DataBaseError(
+						error,
+						error.message
+					)
+				);
+			});
+		} else {
+			return next(
+				new ERROR.NotFoundError(
+				 'User not found'
+				)
+			);
+		}
+	});
+}
+
 exports.createUserByOrgId = createUserByOrgId;
 
 exports.recoverSession = recoverSession;
@@ -215,3 +252,5 @@ exports.recoverSession = recoverSession;
 exports.checkToken = checkToken;
 
 exports.getUserById = getUserById;
+
+exports.updateUserByOrgId = updateUserByOrgId;

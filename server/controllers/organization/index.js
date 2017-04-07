@@ -13,6 +13,8 @@ const _checkOrganizationUserToken = require('./checkOrganizationUserToken');
 
 const _getOrganizationUser = require('./getOrganizationUser');
 
+const _updateOrganizationUser = require('./updateOrganizationUser');
+
 module.exports = {
 
 	"createOrganization": _createOrganization,
@@ -23,5 +25,7 @@ module.exports = {
 
 	"checkOrganizationUserToken": _checkOrganizationUserToken,
 
-	"getOrganizationUser": _getOrganizationUser
+	"getOrganizationUser": _getOrganizationUser,
+
+	"updateOrganizationUser": _updateOrganizationUser
 }

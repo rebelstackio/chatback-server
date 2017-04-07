@@ -43,11 +43,18 @@ router.patch('/:orgid/user', [
 	controller.recoverOrganizationUserSession
 );
 
-router.patch('/:orgid/user/:userid', [
+router.post('/:orgid/user/:userid', [
 		bodyParserJSON,
 		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] )
 	],
 	controller.checkOrganizationUserToken
+);
+
+router.patch('/:orgid/user/:userid', [
+		bodyParserJSON,
+		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] )
+	],
+	controller.updateOrganizationUser
 );
 
 router.get('/:orgid/user/:userid', controller.getOrganizationUser);
