@@ -10,6 +10,8 @@ const reference = global.CONFIG_DATABASE.ref();
 
 const ERROR = require('error');
 
+const auth = require('auth');
+
 /********USERS MODEL*********/
 // name
 // email
@@ -24,6 +26,7 @@ const DEFAULT_USER_MODEL = {
 	email: '',
 	createdAt: firebase.database.ServerValue.TIMESTAMP,
 	updatedAt: '',
+	roles: auth.ROLES.anonymous,
 	restoreToken: '',
 	chatSettings: {
 		audioNotification: true,
@@ -82,6 +85,91 @@ const createUserByOrgId = function _createUser ( organizationId, userBody, next 
 		}
 	});
 };
+
+/**
+ * _createUser - Create a new user
+ *
+ * @param  {string} organizationId User's Organization Id
+ * @param  {object} userBody       User's props
+ * @param  {function} next         callback
+ */
+const createAdminByOrgId = function _createAdminByOrgId ( organizationId, userBody, next ) {
+	//UUID FOR EMAIL
+	const id = aguid(userBody.email);
+	const userRef = reference.child(
+		'users'
+	).child(
+		organizationId
+	).child(
+		id
+	);
+	userRef.once("value").then(function( snapshot ) {
+		if ( snapshot.hasChildren() ) {
+			return next(
+				new ERROR.ConflictError(
+				 'Email already used. You should recover your previous conversation in the chat settings'
+				)
+			);
+		} else {
+			const body = getDefaultUserObject(userBody);
+			body.password = aguid(body.password);
+			//ADMIN ROLE
+			body.roles = auth.ROLES.admin;
+			userRef.set(body).then( function() {
+				body.id = id;
+				return next(null, body);
+			}).catch( function( error ){
+				return next(
+					new ERROR.DataBaseError(
+						error,
+						error.message
+					)
+				);
+			});
+		}
+	});
+};
+
+const authenticate = function _authenticate ( organizationId, admin, next ) {
+	//UUID FOR EMAIL
+	const id = aguid(admin.email);
+	const userRef = reference.child(
+		'users'
+	).child(
+		organizationId
+	).child(
+		id
+	);
+	userRef.once("value").then(function( snapshot ) {
+		if ( snapshot.hasChildren() ) {
+			const _admin = snapshot.val();
+			if ( _admin.password == aguid(admin.password)) {
+				LOGGER.info('Admin: ' + _admin._id + ' (' + _admin.email + ') authenticated' );
+				return next(null, _admin);
+			} else {
+				return next(
+					new ERROR.BadRequestError(
+						"Username or password was incorrect"
+					)
+				)
+			}
+		} else {
+			return next(
+				new ERROR.NotFoundError(
+				 'User not found'
+				)
+			);
+		}
+	}).catch( function( error ) {
+		return next(
+			new ERROR.DataBaseError(
+				error,
+				error.message
+			)
+		);
+	});
+};
+
 
 /**
  * _recoverSession - Create a new user
@@ -250,11 +338,15 @@ const getAllUserByOrgId = function _getAllUserByOrgId(organizationId, next) {
 		'users'
 	).child(
 		organizationId
-	)
+	).orderByChild(
+		"roles"
+	).equalTo(
+		auth.ROLES.anonymous
+	);
 
 	userRef.once("value").then(function( snapshot ) {
 		const users = snapshot.val();
-		 next(null, users);
+		next(null, users);
 	}).catch( function(error){
 		 next(
 			new ERROR.DataBaseError(
@@ -264,6 +356,8 @@ const getAllUserByOrgId = function _getAllUserByOrgId(organizationId, next) {
 		);
 	});
 }
+
+
 
 exports.createUserByOrgId = createUserByOrgId;
 
@@ -276,3 +370,7 @@ exports.getUserById = getUserById;
 exports.updateUserByOrgId = updateUserByOrgId;
 
 exports.getAllUserByOrgId = getAllUserByOrgId;
+
+exports.createAdminByOrgId = createAdminByOrgId;
+
+exports.authenticate = authenticate;

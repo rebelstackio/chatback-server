@@ -12,7 +12,10 @@ const express = require('express')
 const router = express.Router();
 
 const bodyParser = require('body-parser');
+
 const bodyParserJSON = bodyParser.json( { strict: false } );
+
+const authMiddleware = require('auth');
 
 const VR = require('validation/request');
 
@@ -26,6 +29,21 @@ router.post('/', [
 		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] ),
 	],
 	controller.createOrganization
+);
+
+router.post('/:orgid/admin', [
+		bodyParserJSON,
+		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] ),
+		VALIDATESCHEMA( require('../validation/schemas/user.schema') )
+	],
+	controller.createOrganizationAdmin
+);
+
+router.post('/:orgid/login', [
+		bodyParserJSON,
+		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] ),
+	],
+	controller.loginOrganizationAdmin
 );
 
 router.post('/:orgid/user', [

@@ -136,210 +136,29 @@ module.exports = class VCOController {
 			return response.status( 204 ).send();
 		}
 	}
+
+	static respondForbidden ( request, response, errObj ) {
+
+		let statusCode = 403;
+		let type = "Request_Authorisation_Error";
+
+		const responseData = {};
+		responseData.message = "Forbidden";
+
+		if ( errObj ) {
+			if ( errObj.log ) errObj.log();
+			type = errObj.constructor.name;
+			responseData.message = errObj.message
+				?errObj.message
+				:responseData.message;
+
+			statusCode = errObj.httpStatus
+				?errObj.httpStatus
+				:statusCode;
+		}
+		let resJSON = VCOController.buildResponseObj( type, responseData, false );
+		//response.set('WWW-Authenticate', 'application/x-www-form-urlencoded');
+		response.set( 'Content-Type', 'application/json' );
+		return response.status( statusCode ).send( JSON.stringify( resJSON ) );
+	}
 }
-
-
-	// static respondInvalidRequest (
-	// 	request,
-	// 	response,
-	// 	errObj,
-	// 	includeErrObj
-	// ) {
-	// 	let statusCode = 400;
-	// 	let type = "Request_Invalid_Error";
-	// 	const responseData = {};
-	//
-	// 	if ( errObj ) {
-	// 		if ( errObj.log ) errObj.log();
-	// 		type = errObj.constructor.name;
-	// 		responseData.message = errObj.message
-	// 			? errObj.message
-	// 			: "Invalid Request Error";
-	//
-	// 		statusCode = errObj.httpStatus
-	// 			?errObj.httpStatus
-	// 			:statusCode;
-	//
-	// 			if(includeErrObj){
-	// 				errObj.stackTrace = errObj.stack;
-	// 				responseData.data = errObj;
-	// 			}else{
-	// 				if(errObj.stack){
-	// 					responseData.stack = errObj.stack;
-	// 				}
-	// 			}
-	// 	}
-	//
-	// 	const resJSON = VCOController.buildResponseObj( type, responseData, false );
-	// 	response.set( 'Content-Type', 'application/json' );
-	// 	return response.status( statusCode ).send( JSON.stringify( resJSON ) );
-	// }
-	//
-	// static respondInvalidJSON ( request, response, errObj ) {
-	//
-	// 	let statusCode = 500;
-	// 	let type = "Request_Invalid_Error";
-	// 	const responseData = {};
-	//
-	// 	if ( errObj ) {
-	// 		if ( errObj.log ) errObj.log();
-	// 		type = errObj.constructor.name;
-	// 		responseData.message = errObj.message
-	// 			? errObj.message
-	// 			: "Invalid Request Error";
-	//
-	// 		statusCode = errObj.httpStatus
-	// 			?errObj.httpStatus
-	// 			:statusCode;
-	//
-	// 		if (errObj.errorDetail) {
-	// 			responseData.errorDetail = errObj.errorDetail;
-	// 		}
-	// 		if (errObj.origValue) {
-	// 			responseData.origValue = errObj.origValue;
-	// 		}
-	// 	}
-	//
-	// 	const resJSON = VCOController.buildResponseObj( type, responseData, false );
-	// 	response.set( 'Content-Type', 'application/json' );
-	// 	return response.status( statusCode ).send( JSON.stringify( resJSON ) );
-	// }
-	//
-	// static respondNotAuthorized ( request, response, errObj ) {
-	//
-	// 	let statusCode = 401;
-	// 	let type = "Request_Authorisation_Error";
-	//
-	// 	const responseData = {};
-	// 	responseData.message = "Authorisation error";
-	//
-	// 	if ( errObj ) {
-	// 		if ( errObj.log ) errObj.log();
-	// 		type = errObj.constructor.name;
-	// 		responseData.message = errObj.message
-	// 			?errObj.message
-	// 			:responseData.message;
-	//
-	// 		statusCode = errObj.httpStatus
-	// 			?errObj.httpStatus
-	// 			:statusCode;
-	// 	}
-	//
-	// 	const resJSON = VCOController.buildResponseObj( type, responseData, false );
-	// 	response.set( 'WWW-Authenticate', 'application/json' );
-	// 	response.set( 'Content-Type', 'application/json' );
-	// 	return response.status( statusCode ).send( JSON.stringify( resJSON ) );
-	// }
-	//
-	// static respondForbidden ( request, response, errObj ) {
-	//
-	// 	let statusCode = 403;
-	// 	let type = "Request_Authorisation_Error";
-	//
-	// 	const responseData = {};
-	// 	responseData.message = "Forbidden";
-	//
-	// 	if ( errObj ) {
-	// 		if ( errObj.log ) errObj.log();
-	// 		type = errObj.constructor.name;
-	// 		responseData.message = errObj.message
-	// 			?errObj.message
-	// 			:responseData.message;
-	//
-	// 		statusCode = errObj.httpStatus
-	// 			?errObj.httpStatus
-	// 			:statusCode;
-	// 	}
-	// 	let resJSON = VCOController.buildResponseObj( type, responseData, false );
-	// 	//response.set('WWW-Authenticate', 'application/x-www-form-urlencoded');
-	// 	response.set( 'Content-Type', 'application/json' );
-	// 	return response.status( statusCode ).send( JSON.stringify( resJSON ) );
-	// }
-	//
-	// static respondNotFound ( request, response, errObj ) {
-	//
-	// 	let statusCode = 404;
-	// 	let type = "error";
-	//
-	// 	const responseData = {};
-	// 	responseData.message = "Resource not found";
-	//
-	// 	if ( errObj ) {
-	// 		if ( errObj.log ) errObj.log();
-	// 		type = errObj.constructor.name;
-	// 		responseData.message = errObj.message
-	// 			?errObj.message
-	// 			:responseData.message;
-	//
-	// 		statusCode = errObj.httpStatus
-	// 			?errObj.httpStatus
-	// 			:statusCode;
-	// 	}
-	//
-	// 	const resJSON = VCOController.buildResponseObj(
-	// 		type,
-	// 		responseData,
-	// 		false
-	// 	);
-	// 	response.set( 'Content-Type', 'application/json' );
-	// 	return response.status( statusCode ).send( JSON.stringify( resJSON ) );
-	// }
-	//
-	// static respondError (
-	// 	request,
-	// 	response,
-	// 	errObj
-	// ) {
-	//
-	// 	let statusCode = 500;
-	// 	let responseData = {};
-	//
-	// 	if ( errObj ) {
-	// 		if ( errObj.log ) errObj.log();
-	// 		responseData = errObj;
-	// 		type = errObj.constructor.name;
-	// 		statusCode = errObj.httpStatus
-	// 			?errObj.httpStatus
-	// 			:statusCode;
-	// 	} else{
-	// 		responseData.message = "Unexpected Error";
-	// 		responseData.httpStatus = 500;
-	// 	}
-	//
-	// 	const resJSON = this.buildResponseObj( type, responseData, false );
-	// 	response.set( 'Content-Type', 'application/json' );
-	// 	return response.status( statusCode ).send( JSON.stringify( resJSON ) );
-	// }
-
-	//
-	// static respondPOSTCreated (
-	// 	request,
-	// 	response,
-	// 	location,
-	// 	wrappedData
-	// ) {
-	//
-	// 	if(typeof location !== 'string'){
-	// 		throw new TypeError('Location header value is required');
-	// 	};
-	//
-	// 	let statusCode = 201;
-	//
-	// 	if ( wrappedData ) {
-	// 		const responseData = wrappedData.data ? wrappedData.data : {};
-	// 		const responseType = wrappedData.type ? wrappedData.type : "created";
-	// 		statusCode = wrappedData.httpStatus ? wrappedData.httpStatus : statusCode;
-	// 		const stripNulls = wrappedData.stripNulls;
-	// 		const resJSON = VCOController.buildResponseObj(
-	// 			responseType,
-	// 			responseData,
-	// 			stripNulls
-	// 		);
-	//
-	// 		response.set( 'Content-Type', 'application/json' );
-	// 		response.set( 'Location', location );
-	// 		return response.status( statusCode ).send( JSON.stringify( resJSON ) );
-	// 	} else {
-	// 		return response.status( 204 ).send();
-	// 	}
-	// }
