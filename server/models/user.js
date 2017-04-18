@@ -144,7 +144,8 @@ const authenticate = function _authenticate ( organizationId, admin, next ) {
 		if ( snapshot.hasChildren() ) {
 			const _admin = snapshot.val();
 			if ( _admin.password == aguid(admin.password)) {
-				LOGGER.info('Admin: ' + _admin._id + ' (' + _admin.email + ') authenticated' );
+				_admin.id = id;
+				LOGGER.info('Admin: ' + id + ' (' + _admin.email + ') authenticated' );
 				return next(null, _admin);
 			} else {
 				return next(
@@ -156,7 +157,7 @@ const authenticate = function _authenticate ( organizationId, admin, next ) {
 		} else {
 			return next(
 				new ERROR.NotFoundError(
-				 'User not found'
+				 'The user ' + admin.email  + ' doesn\'t exists'
 				)
 			);
 		}
