@@ -145,6 +145,7 @@ const authenticate = function _authenticate ( organizationId, admin, next ) {
 			const _admin = snapshot.val();
 			if ( _admin.password == aguid(admin.password)) {
 				_admin.id = id;
+				_admin.password = null;
 				LOGGER.info('Admin: ' + id + ' (' + _admin.email + ') authenticated' );
 				return next(null, _admin);
 			} else {
