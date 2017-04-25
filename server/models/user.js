@@ -359,8 +359,6 @@ const getAllUserByOrgId = function _getAllUserByOrgId(organizationId, next) {
 	});
 }
 
-
-
 exports.createUserByOrgId = createUserByOrgId;
 
 exports.recoverSession = recoverSession;
