@@ -10,4 +10,6 @@ module.exports.models = {
 
 	Avatar: require('./avatar'),
 
+	Message: require('./message')
+
 };

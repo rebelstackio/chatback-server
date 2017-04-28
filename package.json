@@ -22,7 +22,9 @@
     "forwarded-for": "^0.1.1",
     "jsonschema": "^1.1.0",
     "jwt-simple": "^0.5.0",
-    "nodemailer": "^3.1.8"
+    "moment": "^2.18.1",
+    "nodemailer": "^3.1.8",
+    "swig": "^1.4.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<style>
+  #content{
+    padding:15px;
+  }
+  #logo{
+    padding-top:10px;
+    padding-left:40px;
+  }
+  #main{
+    margin-top:20px;
+    padding:15px;
+    border:solid 2px rgba(208, 208, 208, 0.82);
+  }
+  h1{
+    font-size:18pt;
+  }
+  h2{
+    font-size:15pt;
+  }
+  h3{
+    font-size:13pt;
+  }
+  #itemTable{
+    width:100%;
+    border-collapse: collapse;
+    margin-top:30px;
+  }
+  #itemTable td{
+    border: solid 1px rgb(237, 237, 237);
+    padding-left:10px;
+  }
+  #itemTable thead{
+    background-color:rgb(237, 237, 237);
+    font-weight:normal;
+  }
+</style>
+<div id="content">
+
+<div id="main">
+  <div style="float:left;">
+    {{date}}
+  </div>
+  <div style="float:right;">
+    <b>User</b>:<br/> {{user.name}}
+  </div>
+  <br style="clear:both"/>
+<hr/>
+
+<br/>
+<br/>
+
+<table id="itemTable">
+  <tbody>
+  {% if Object.keys(messages).length  %}
+    {% for key in Object.keys(messages) %}
+      <tr>
+        <td>
+          {% if messages[key].source == 'CLIENT' %}
+            <p><b>{{user.name}}:</b>{{messages[key].message}} </p>
+          {% else %}
+            <p><b>Operator:</b> {{messages[key].message}}</p>
+          {% endif %}
+        <td>
+      </tr>
+    {% endfor %}
+  {% else %}
+    <tr>
+      <td>No messages</td>
+    </tr>
+  {% endif %}
+  </tbody>
+</table>
+<br/>
+
+</div>
+
+
+</div>
+</body>
+</html>

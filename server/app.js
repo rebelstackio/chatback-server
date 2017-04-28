@@ -43,6 +43,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 let firebaseApp;
+let firebaseMessageApp;
 
 try {
 	firebaseApp = firebase.initializeApp({
@@ -53,12 +54,22 @@ try {
 		messagingSenderId: process.env.FB_CONFIG_MESSAGINGSENDERID
 	});
 
+	firebaseMessageApp = firebase.initializeApp({
+		apiKey: process.env.FB_MESSAGE_APIKEY,
+		authDomain: process.env.FB_MESSAGE_AUTHDOMAIN,
+		databaseURL: process.env.FB_MESSAGE_DATABASEURL,
+		storageBucket: process.env.FB_MESSAGE_PROJECTID,
+		messagingSenderId: process.env.FB_MESSAGE_MESSAGINGSENDERID
+	}, 'MESSAGE');
+
 } catch (e) {
 	LOGGER.error( e );
 	process.exit(1);
 }
 
 global.CONFIG_DATABASE = firebaseApp.database();
+
+global.MESSAGE_DATABASE = firebaseMessageApp.database();
 
 LOGGER.info("Firebase App created!");
 

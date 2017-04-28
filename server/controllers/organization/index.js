@@ -21,6 +21,8 @@ const _createOrganizationAdmin = require('./createOrganizationAdmin');
 
 const _loginOrganizationAdmin = require('./loginOrganizationAdmin');
 
+const _sendEmailHistoryByOrgUser = require('./sendEmailHistoryByOrgUser');
+
 module.exports = {
 
 	"createOrganization": _createOrganization,
@@ -39,5 +41,7 @@ module.exports = {
 
 	"createOrganizationAdmin": _createOrganizationAdmin,
 
-	"loginOrganizationAdmin": _loginOrganizationAdmin
+	"loginOrganizationAdmin": _loginOrganizationAdmin,
+
+	"sendEmailHistoryByOrgUser": _sendEmailHistoryByOrgUser
 }

@@ -75,8 +75,16 @@ router.patch('/:orgid/user/:userid', [
 	controller.updateOrganizationUser
 );
 
+
 router.get('/:orgid/user', controller.getAllOrganizationUser);
 
 router.get('/:orgid/user/:userid', controller.getOrganizationUser);
+
+router.post('/:orgid/user/:userid/history', [
+		bodyParserJSON,
+		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] )
+	],
+	controller.sendEmailHistoryByOrgUser
+);
 
 module.exports = router;
