@@ -82,7 +82,7 @@ router.get('/:orgid/user/:userid', controller.getOrganizationUser);
 
 router.post('/:orgid/user/:userid/history', [
 		bodyParserJSON,
-		VR.validateRequest( [ RX.NOT_ACCEPT_JSON, RX.NOT_APPLICATION_JSON ] )
+		VR.validateRequest( [ RX.NOT_ACCEPT_JSON ] )
 	],
 	controller.sendEmailHistoryByOrgUser
 );
