@@ -9,7 +9,8 @@
   "scripts": {
     "start": "NODE_ENV=development node ./server/server.js",
     "debug": "NODE_ENV=development node-debug ./server/server.js",
-    "test": "NODE_PATH=server/lib mocha server/test --recursive --reporter spec"
+    "test": "NODE_PATH=server/lib mocha server/test --recursive --reporter spec",
+    "start-pm2": "NODE_ENV=development pm2 start ./server/server.js --name 'rebelchatserver' "
   },
   "dependencies": {
     "aguid": "^2.0.0",
